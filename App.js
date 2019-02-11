@@ -15,25 +15,12 @@ import Card from './src/component/Card';
 import Button from './src/component/Button';
 
 class App extends Component {
-
-  renderButton(){
-       return(
-  <Button >Login</Button>
-    );
-  }
   render() {
     return(
-      <Card>
-      <Cardsection>
-    <View>
-      <Login/>
-      </View>
-      </Cardsection>
- <Cardsection>
-    {this.renderButton()}
-    </Cardsection>
-     </Card>
-  );
+      <View>
+        <Login/>
+        </View>   
+       );
   }
 }
 export default App;
