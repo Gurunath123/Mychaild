@@ -25,7 +25,7 @@ class App extends Component {
     projectId: "school-3051a",
     storageBucket: "school-3051a.appspot.com",
     messagingSenderId: "120266050681"
-});
+});  
 
 firebase.auth().onAuthStateChanged((user) => {
 if(user){

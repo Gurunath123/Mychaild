@@ -5,59 +5,81 @@ import Button from './Button';
 import Input from './Input';
 import Card from './Card';
 import Cardsection from './Cardsection';
+import Spinner from './Spinner';
 import firebase from 'firebase/app';
 const image = require('../../images/school.jpg');
 
 class Login extends Component
 {
-    constructor(props){
-        super(props);
-    
-        this.state = { mobileno: '' ,
-        password: '',
-        error: '',
-      loading: false};
-      }
+  constructor(props){
+    super(props);
 
-      onButtonPress(){
-        const { mobileno,password }=this.state;
-        this.setState({error: '',loading:true});
-        console.log('huyhhuybuyb ');
-      
-      firebase.auth().signInWithPhoneNumber(mobileno, firebase.auth.PhoneAuthProvider)
-      .then(this.onLoginSuccess.bind(this))
-      .catch(() => {
-       firebase.auth().createUserWithEmailAndPassword(mobileno, password)
-       .then(this.onLoginSuccess.bind(this))
-       .catch(this.onLoginFail.bind(this)); 
-         
-       });
-      
-      }
+    this.state = { email: '' ,
+    password: '',
+    error: '',
+  loading: false};
+  }
+  
 
-      onLoginFail(){
-        this.setState({ error: 'Authentication Failed',loading: false });
-      }
-      onLoginSuccess(){
-      this.setState({
-      mobileno: '',
-      password: '',
-      loading: false,
-      error: ''
-      });
-    }
+onButtonPress(){
+  const { email,password }=this.state;
+  console.log("check",this.state);
+  this.setState({error: '',loading:true});
+ 
 
-    renderButton(){
-        if(this.state.loading)
-        {
-          return (
-              <Text>Done</Text>
-          );
-        }
-        return (
-      <Button onPress={this.onButtonPress.bind(this)}>Login</Button>
-        );
-      }
+/**firebase.auth()
+.signInWithEmailAndPassword(email, password) 
+.then((res) => {
+  console.log("respo",res);
+  
+})
+.catch(() => {
+ firebase.auth().createUserWithEmailAndPassword(email, password)
+ 
+ .then((res) => {
+  console.log("createUserWithEmailAndPassword------------- ",res);
+  
+})
+ .catch((err) => {
+  console.log("catch",err);
+  
+ }); 
+   
+ });**/
+
+ firebase.auth().signInWithEmailAndPassword(email, password)
+.then(this.onLoginSuccess.bind(this))
+.catch(() => {
+ firebase.auth().createUserWithEmailAndPassword(email, password)
+ .then(this.onLoginSuccess.bind(this))
+ .catch(this.onLoginFail.bind(this)); 
+})
+
+}
+onLoginFail(){
+  console.log('FAILED');
+  this.setState({ error: 'Authentication Failed',loading: false });
+}
+onLoginSuccess(){
+this.setState({
+email: '',
+password: '',
+loading: false,
+error: ''
+});
+
+
+}
+renderButton(){
+  if(this.state.loading)
+  {
+  console.log("email1", this.state);
+    return <Spinner size="small"/>;
+  }
+  return (
+<Button onPress={this.onButtonPress.bind(this)}>Login</Button>
+  );
+}
 
     render(){
         return(
@@ -68,19 +90,32 @@ class Login extends Component
             source ={ require('../../images/School3.png')} 
             style ={ styles.imagestyle }/>
            </Cardsection>
-
+         
+  
            <Cardsection>
            <Input
-           placeholder="XXXXXXXXX"
-           label="Mobile No"/>
+           placeholder="user@gmail.com"
+           label="Email-id"
+           value={this.state.email}
+           onChangeText={email => this.setState({ email })}
+           />
            </Cardsection>
+          
+ 
 
            <Cardsection>
            <Input
            secureTextEntry
            placeholder="password"
-           label="Password"/>
+           label="Password"
+           value={this.state.password}
+           onChangeText={password => this.setState({ password })}
+           />
            </Cardsection>
+
+           <Text style={styles.errorTextStyle} style={{ height:100, width:100 }}>
+    {this.state.error}
+    </Text>
 
            <Cardsection>
            {this.renderButton()}
@@ -97,9 +132,12 @@ const styles ={
        marginLeft:30,
        marginRight:30,
        marginBottom:30     
-       
-
-    }
+      },
+      errorTextStyle: {
+        fontSize: 20,
+        alignItems: 'center',
+        color: 'red'
+      }
 }
 
 export default Login ;
